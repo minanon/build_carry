@@ -1,0 +1,30 @@
+RUN apt install -y python python-dev
+
+curl -L 'https://ftp.gnu.org/gnu/nettle/nettle-3.3.tar.gz' | tar -zx
+cd nettle-3.3
+./configure
+make -j $(nproc) && make install
+
+curl -L 'https://ftp.gnu.org/gnu/libtasn1/libtasn1-4.9.tar.gz' | tar -zx
+cd libtasn1-4.9
+./configure
+make -j $(nproc) && make install
+
+curl -L 'ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz' | tar -zx
+cd libffi-3.2.1
+./configure
+make -j $(nproc) && make install
+
+curl -L 'https://p11-glue.freedesktop.org/releases/p11-kit-0.23.2.tar.gz' | tar -zx
+cd p11-kit-0.23.2
+./configure
+make -j $(nproc) && make install
+
+curl -L 'ftp://ftp.gnutls.org/gcrypt/gnutls/v3.5/gnutls-3.5.5.tar.xz' | tar -Jx
+cd gnutls-3.5.5
+./configure
+make -j $(nproc) && make install
+
+#libacl
+
+curl -L 'https://download.samba.org/pub/samba/stable/samba-4.5.0.tar.gz' | tar -zx
