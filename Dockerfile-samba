@@ -1,30 +1,50 @@
+FROM build_carry
+
 RUN apt install -y python python-dev
 
-curl -L 'https://ftp.gnu.org/gnu/nettle/nettle-3.3.tar.gz' | tar -zx
-cd nettle-3.3
-./configure
-make -j $(nproc) && make install
+WORKDIR=/tmp
 
-curl -L 'https://ftp.gnu.org/gnu/libtasn1/libtasn1-4.9.tar.gz' | tar -zx
-cd libtasn1-4.9
-./configure
-make -j $(nproc) && make install
+RUN app=nettle-3.3 \
+    && curl -L 'https://ftp.gnu.org/gnu/nettle/${app}.tar.gz' | tar -zx \
+    && cd ${app} \
+    && ./configure --prefix=/usr/local \
+    && make -j $(nproc) && make install
+    && cd ../ && rm -rf ${app}
 
-curl -L 'ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz' | tar -zx
-cd libffi-3.2.1
-./configure
-make -j $(nproc) && make install
+RUN app=libtasn1-4.9 \
+    && curl -L 'https://ftp.gnu.org/gnu/libtasn1/${app}.tar.gz' | tar -zx \
+    && cd ${app} \
+    && ./configure --prefix=/usr/local \
+    && make -j $(nproc) && make install
+    && cd ../ && rm -rf ${app}
 
-curl -L 'https://p11-glue.freedesktop.org/releases/p11-kit-0.23.2.tar.gz' | tar -zx
-cd p11-kit-0.23.2
-./configure
-make -j $(nproc) && make install
+RUN app=libffi-3.2.1 \
+    && curl -L 'ftp://sourceware.org/pub/libffi/${app}.tar.gz' | tar -zx \
+    && cd ${app} \
+    && ./configure --prefix=/usr/local \
+    && make -j $(nproc) && make install
+    && cd ../ && rm -rf ${app}
 
-curl -L 'ftp://ftp.gnutls.org/gcrypt/gnutls/v3.5/gnutls-3.5.5.tar.xz' | tar -Jx
-cd gnutls-3.5.5
-./configure
-make -j $(nproc) && make install
+RUN app=p11-kit-0.23.2 \
+    && curl -L 'https://p11-glue.freedesktop.org/releases/${app}.tar.gz' | tar -zx \
+    && cd ${app} \
+    && ./configure --prefix=/usr/local \
+    && make -j $(nproc) && make install \
+    && cd ../ && rm -rf ${app}
+
+RUN app=gnutls-3.5.5 \
+    && curl -L 'ftp://ftp.gnutls.org/gcrypt/gnutls/v3.5/${app}.tar.xz' | tar -Jx \
+    && cd ${app} \
+    && ./configure --prefix=/usr/local \
+    && make -j $(nproc) && make install \
+    && cd ../ && rm -rf ${app}
 
 #libacl
 
-curl -L 'https://download.samba.org/pub/samba/stable/samba-4.5.0.tar.gz' | tar -zx
+RUN app=samba-4.5.0 \
+    && curl -L 'https://download.samba.org/pub/samba/stable/${app}.tar.gz' | tar -zx \
+    && cd ${app} \
+    && ./configure --prefix=/usr/local \
+    && make -j $(nproc) && make install
+
+WORKDIR=/

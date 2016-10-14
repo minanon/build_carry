@@ -1,9 +1,13 @@
-FROM debian:latest
+FROM alpine
 
-RUN apt update \
-    && apt install -y gcc make patch curl xz-utils m4 pkg-config
+RUN apk update \
+    && apk add -q --no-progress gcc libc-dev glib-dev linux-headers make patch curl m4 pkgconfig perl
 
-RUN curl -L 'https://www.openssl.org/source/openssl-1.1.0b.tar.gz' | tar -zx \
-    && cd openssl-1.1.0b \
-    && ./config \
-    && make -j $(nproc) && make install
+# openssl
+RUN app=openssl-1.1.0b \
+    && cd /tmp \
+    && curl -L "https://www.openssl.org/source/${app}.tar.gz" | tar -zx \
+    && cd ${app} \
+    && ./config --prefix=/usr/local \
+    && make -j $(grep -E '^processor' /proc/cpuinfo  | wc -l) && make install \
+    && cd ../ && rm -rf ${app}
