@@ -1,50 +1,14 @@
 FROM build_carry
 
-RUN apt install -y python python-dev
+RUN pacman -Sy --noconfirm python2 gnutls
 
 WORKDIR=/tmp
 
-RUN app=nettle-3.3 \
-    && curl -L "https://ftp.gnu.org/gnu/nettle/${app}.tar.gz" | tar -zx \
-    && cd ${app} \
-    && ./configure --prefix=/usr/local --enable-mini-gmp \
-    && make -j $(nproc) && make install \
-    && cd ../ && rm -rf ${app}
-
-RUN app=libtasn1-4.9 \
-    && curl -L "https://ftp.gnu.org/gnu/libtasn1/${app}.tar.gz" | tar -zx \
-    && cd ${app} \
-    && ./configure --prefix=/usr/local \
-    && make -j $(nproc) && make install \
-    && cd ../ && rm -rf ${app}
-
-RUN app=libffi-3.2.1 \
-    && curl -L "ftp://sourceware.org/pub/libffi/${app}.tar.gz" | tar -zx \
-    && cd ${app} \
-    && ./configure --prefix=/usr/local \
-    && make -j $(nproc) && make install \
-    && cd ../ && rm -rf ${app}
-
-RUN app=p11-kit-0.23.2 \
-    && curl -L "https://p11-glue.freedesktop.org/releases/${app}.tar.gz" | tar -zx \
-    && cd ${app} \
-    && ./configure --prefix=/usr/local \
-    && make -j $(nproc) && make install \
-    && cd ../ && rm -rf ${app}
-
-RUN app=gnutls-3.5.5 \
-    && curl -L "ftp://ftp.gnutls.org/gcrypt/gnutls/v3.5/${app}.tar.xz" | tar -Jx \
-    && cd ${app} \
-    && ./configure --prefix=/usr/local \
-    && make -j $(nproc) && make install \
-    && cd ../ && rm -rf ${app}
-
-#libacl
-
 RUN app=samba-4.5.0 \
+    && export PYTHON=/usr/bin/python2 \
     && curl -L "https://download.samba.org/pub/samba/stable/${app}.tar.gz" | tar -zx \
     && cd ${app} \
-    && ./configure --prefix=/usr/local \
+    && ./configure --prefix=/opt/apps/samba \
     && make -j $(nproc) && make install \
     && cd ../ && rm -rf ${app}
 
