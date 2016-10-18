@@ -1,8 +1,8 @@
 FROM build_carry
 
-RUN pacman -Sy --noconfirm python2 gnutls
+RUN pacman -Sy --noconfirm python2 gnutls python
 
-WORKDIR=/tmp
+WORKDIR /tmp
 
 RUN app=samba-4.5.0 \
     && export PYTHON=/usr/bin/python2 \
@@ -12,4 +12,6 @@ RUN app=samba-4.5.0 \
     && make -j $(nproc) && make install \
     && cd ../ && rm -rf ${app}
 
-WORKDIR=/
+WORKDIR /
+
+CMD [ "/opt/apps/samba", "samba.tar.gz" ]
