@@ -1,4 +1,4 @@
-FROM archlinux
+FROM minanon/archlinux
 
 RUN pacman -Sy --noconfirm gcc tar make patch pkgconfig
 
